@@ -20,7 +20,7 @@ PROXY = os.getenv("PROXY", "")
 PROXY_AUTH = os.getenv("PROXY_AUTH", "")
 PROXY_ENABLED = strtobool(os.getenv("PROXY_ENABLED", "False"))
 
-USER_AGENT_RELEASE_DATE = '2020-11-17'
+USER_AGENT_RELEASE_DATE = '2021-11-17'
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
 )
@@ -93,5 +93,3 @@ if IS_SENTRY_ENABLED:
     EXTENSIONS["scrapy_sentry_sdk.extensions.SentryLogging"] = 1
 
 configure_logging()
-if datetime(*[int(number) for number in USER_AGENT_RELEASE_DATE.split('-')]) + timedelta(days=180) < datetime.now():
-    logging.warning('USER_AGENT is outdated')
