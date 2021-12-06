@@ -24,9 +24,6 @@ class UserAgentMiddleware:
             logging.warning('USER_AGENT is outdated')
 
     def spider_opened(self, spider: Spider):
-        user_agent = getattr(spider, 'user_agent', self.user_agent)
-        if user_agent:
-            self.user_agent = user_agent
         self.user_agents = getattr(spider, 'user_agents', self.user_agents)
 
     def process_request(self, request: Request, spider: Spider):
