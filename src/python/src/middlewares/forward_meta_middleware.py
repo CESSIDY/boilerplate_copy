@@ -8,14 +8,20 @@ class ForwardMetaMiddleware:
 
     def __init__(self):
         self.last_meta = None
+        self.service_fields = []
 
     def process_request(self, request: Request, spider: Spider):
         if self.last_meta:
-            request.meta += self.last_meta
+            request.meta.update(self.last_meta)
 
     def process_response(self, request: Request, response: Response, spider: Spider):
         meta = getattr(response, "meta", None)
         if meta:
+            for field in self.service_fields:
+                try:
+                    del meta[field]
+                except KeyError:
+                    pass
             self.last_meta = meta
         logging.info(meta)
         return response
