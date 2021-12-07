@@ -5,8 +5,7 @@ from datetime import datetime, timedelta
 class UserAgentMiddleware:
     """This middleware allows spiders to use the user_agent from list"""
 
-    def __init__(self, user_agent='', user_agents=''):
-        self.user_agent = user_agent
+    def __init__(self, user_agents=''):
         self.user_agents = user_agents
 
     @classmethod
