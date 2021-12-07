@@ -5,16 +5,12 @@ from datetime import datetime, timedelta
 class UserAgentMiddleware:
     """This middleware allows spiders to use the user_agent from list"""
 
-    def __init__(self, user_agents=''):
-        self.user_agents = user_agents
-
     @classmethod
     def from_crawler(cls, crawler):
         cls.user_agent_release_data_checing(crawler)
-        o = cls(crawler.settings['USER_AGENT'])
         cls.user_agent = crawler.settings['USER_AGENT']
-        crawler.signals.connect(o.spider_opened, signal=signals.spider_opened)
-        return o
+        crawler.signals.connect(cls.spider_opened, signal=signals.spider_opened)
+        return cls
 
     @staticmethod
     def user_agent_release_data_checing(crawler):
