@@ -5,12 +5,17 @@ from datetime import datetime, timedelta
 class UserAgentMiddleware:
     """This middleware allows spiders to use the user_agent from list"""
 
+    def __init__(self) -> None:
+        self.user_agents = None
+        self.user_agent = None
+
     @classmethod
     def from_crawler(cls, crawler):
-        cls.user_agent_release_data_checing(crawler)
-        cls.user_agent = crawler.settings['USER_AGENT']
-        crawler.signals.connect(cls.spider_opened, signal=signals.spider_opened)
-        return cls
+        o = cls()
+        o.user_agent_release_data_checing(crawler)
+        o.user_agent = crawler.settings['USER_AGENT']
+        crawler.signals.connect(o.spider_opened, signal=signals.spider_opened)
+        return o
 
     @staticmethod
     def user_agent_release_data_checing(crawler):
@@ -19,6 +24,7 @@ class UserAgentMiddleware:
             logging.warning('USER_AGENT is outdated')
 
     def spider_opened(self, spider: Spider):
+        logging.info("Spider Open")
         self.user_agents = getattr(spider, 'user_agents', self.user_agents)
 
     def process_request(self, request: Request, spider: Spider):

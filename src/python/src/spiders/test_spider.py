@@ -12,6 +12,8 @@ class TestSpider(Spider):
         }
     }
 
+    #meta_service_fields = ['download_timeout', 'download_slot', 'download_latency']
+
     def parse(self, response, **kwargs):
         if self.index < 10:
             self.index += 1
