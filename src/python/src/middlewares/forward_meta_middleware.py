@@ -33,5 +33,4 @@ class ForwardMetaMiddleware:
                 except KeyError:
                     pass
             self.last_meta = meta
-        logging.info(self.last_meta)
         return response
