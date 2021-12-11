@@ -16,6 +16,9 @@ SPIDER_MODULES = ["spiders"]
 NEWSPIDER_MODULE = "spiders"
 COMMANDS_MODULE = "commands"
 
+PROXY_MODE = os.getenv("PROXY_MODE", "")
+PROXY_LIST = os.getenv("PROXY_LIST", "")
+
 PROXY = os.getenv("PROXY", "")
 PROXY_AUTH = os.getenv("PROXY_AUTH", "")
 PROXY_ENABLED = strtobool(os.getenv("PROXY_ENABLED", "False"))
