@@ -1,5 +1,6 @@
 .idea/
 .env
+proxy_list.json
 /docker_persistent_data/*
 !/docker_persistent_data/.gitkeep
 /data/*

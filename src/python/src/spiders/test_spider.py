@@ -22,7 +22,8 @@ class TestSpider(Spider):
                 errback=self.errback,
                 dont_filter=True,
             )
-        return None
+        else:
+            return None
 
     def errback(self, failure):
         self.logger.error(failure)

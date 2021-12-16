@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import random
 import json
 from w3lib.http import basic_auth_header
+from pathlib import Path
 
 log = logging.getLogger('scrapy.proxy_rotation')
 
@@ -14,11 +15,44 @@ class ProxyRotationMiddleware:
     logging_enabled = True
 
     def __init__(self, settings) -> None:
-        self.proxy_list: list = json.loads(settings['PROXY_LIST']) if settings['PROXY_LIST'] else None
         self.mode: int = int(settings['PROXY_MODE']) if settings['PROXY_MODE'] else None
         self.proxy: str = settings['PROXY']
         self.proxy_auth: str = settings['PROXY_AUTH']
         self.proxy_enabled: bool = bool(settings['PROXY_ENABLED']) if settings['PROXY_ENABLED'] else None
+        self.proxy_list: list = self.get_proxy_list(settings)
+
+    @staticmethod
+    def get_proxy_list(settings):
+        proxy_list = None
+        file = settings['PROXY_LIST_FILE']
+        if file:
+            file_path = Path(str(file).strip())
+            if file_path.exists():
+                with open(file_path, 'r') as file:
+                    proxy_list_json = file.read()
+                proxy_list = ProxyRotationMiddleware.__loads_proxy_list_json(proxy_list_json, file_path)
+                ProxyRotationMiddleware.__is_proxy_list_correct(proxy_list)
+            else:
+                log.warning(f"File {file_path} does not exist")
+
+        return proxy_list
+
+    @staticmethod
+    def __loads_proxy_list_json(proxy_list_json, file):
+        if proxy_list_json:
+            try:
+                proxy_list = json.loads(proxy_list_json)
+                return proxy_list
+            except:
+                raise Exception(f"Incorect json format in {file} file")
+        return None
+
+    @staticmethod
+    def __is_proxy_list_correct(proxy_list):
+        if len(proxy_list):
+            for i, proxy_item in enumerate(proxy_list):
+                if not proxy_item.get("proxy"):
+                    raise Exception(f"Empty proxy field: {i+1}")
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -55,6 +89,8 @@ class ProxyRotationMiddleware:
                 proxy_auth = proxy_item.get("auth")
                 if proxy_auth:
                     request.headers["Proxy-Authorization"] = basic_auth_header(*proxy_auth.split(":"))
+                elif request.headers.get("Proxy-Authorization"):
+                    del request.headers["Proxy-Authorization"]
                 if "http" not in proxy:
                     proxy = "http://{}".format(proxy)
                 request.meta["proxy"] = proxy
