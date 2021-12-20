@@ -15,7 +15,7 @@ class UserAgentMiddleware:
     """
     This middleware allows spiders to use the user_agent from list
 
-    .env:
+    settings.py:
         USER_AGENT_LIST = [
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64)...",
         "Mozilla/5.0 (Linux; Android 8.0.0; SM-G960F Build/R16NW)...,
