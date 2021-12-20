@@ -6,11 +6,25 @@ import json
 
 log = logging.getLogger('scrapy.useragent')
 
-class Mode:
-    RANDOMIZE_ONCE, RANDOMIZE_EVERY_REQUESTS, IN_ORDER_EVERY_REQUESTS = range(1,4) # 1, 2 ,3
+class UserAgentMode:
+    RANDOMIZE_ONCE = 1
+    RANDOMIZE_EVERY_REQUESTS = 2
+    IN_ORDER_EVERY_REQUESTS = 3
 
 class UserAgentMiddleware:
-    """This middleware allows spiders to use the user_agent from list"""
+    """
+    This middleware allows spiders to use the user_agent from list
+
+    .env:
+        USER_AGENT_LIST = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64)...",
+        "Mozilla/5.0 (Linux; Android 8.0.0; SM-G960F Build/R16NW)...,
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X)..."
+        ...
+        ]
+        USER_AGENT_MODE = 1 or 2 or 3
+    """
+
 
     def __init__(self, *args, **kwargs):
         self.last_user_agent = None
@@ -44,15 +58,15 @@ class UserAgentMiddleware:
             request.headers.setdefault(b'User-Agent', self.user_agent)
 
     def get_user_agent_from_list(self):
-        if self.mode == Mode.RANDOMIZE_ONCE:
+        if self.mode == UserAgentMode.RANDOMIZE_ONCE:
             if not self.last_user_agent:
                 user_agent = random.choice(list(self.user_agents))
                 self.last_user_agent = user_agent
             else:
                 user_agent = self.last_user_agent
-        elif self.mode == Mode.RANDOMIZE_EVERY_REQUESTS:
+        elif self.mode == UserAgentMode.RANDOMIZE_EVERY_REQUESTS:
             user_agent = random.choice(list(self.user_agents))
-        elif self.mode == Mode.IN_ORDER_EVERY_REQUESTS:
+        elif self.mode == UserAgentMode.IN_ORDER_EVERY_REQUESTS:
             user_agent = self.user_agents.pop(0)
             self.user_agents.append(user_agent)
         log.info(user_agent)
