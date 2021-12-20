@@ -8,10 +8,25 @@ from pathlib import Path
 
 log = logging.getLogger('scrapy.proxy_rotation')
 
-class Mode:
-    RANDOMIZE_EVERY_REQUESTS, IN_ORDER_EVERY_REQUESTS = range(1,3) # 1, 2
+class ProxyMode:
+    RANDOMIZE_EVERY_REQUESTS = 1
+    IN_ORDER_EVERY_REQUESTS = 2
 
 class ProxyRotationMiddleware:
+    """
+    This middleware allows spiders to use the proxy from list of proxies
+
+    .env:
+        PROXY_MODE= 1 or 2
+        PROXY_LIST_FILE='absolute_path\proxy_list.json'
+
+    proxy_list.json:
+        [
+            {"proxy": "xxx.xxx.xxx:xxxx","auth": ""},
+            {"proxy": "xxx.xxx.xxx:xxxx","auth": ""}
+        ]
+    """
+
     logging_enabled = True
 
     def __init__(self, settings) -> None:
@@ -76,9 +91,9 @@ class ProxyRotationMiddleware:
         if self.proxy_list:
             proxy_item = None
 
-            if self.mode == Mode.RANDOMIZE_EVERY_REQUESTS:
+            if self.mode == ProxyMode.RANDOMIZE_EVERY_REQUESTS:
                 proxy_item = random.choice(list(self.proxy_list))
-            elif self.mode == Mode.IN_ORDER_EVERY_REQUESTS:
+            elif self.mode == ProxyMode.IN_ORDER_EVERY_REQUESTS:
                 proxy_item = self.proxy_list.pop(0)
                 self.proxy_list.append(proxy_item)
             else:
