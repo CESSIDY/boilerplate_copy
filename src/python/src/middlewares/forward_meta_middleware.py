@@ -1,14 +1,19 @@
 from scrapy import Spider, Request, Spider, signals
 from scrapy.http import Response
-import logging
-from datetime import datetime, timedelta
+
 
 class ForwardMetaMiddleware:
     """This middleware allows spiders to forward meta from response to request"""
 
     def __init__(self):
         self.last_meta = None
-        self.service_fields = ['download_timeout', 'download_slot', 'download_latency', 'retry_times']
+        self.service_fields = [
+            'download_timeout',
+            'download_slot',
+            'download_latency',
+            'retry_times',
+            'depth'
+            ]
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -21,16 +26,13 @@ class ForwardMetaMiddleware:
 
     def process_request(self, request: Request, spider: Spider):
         if self.last_meta:
+            spider.logger.warning(f'self.last_meta {self.last_meta}')
             request.meta.update(self.last_meta)
 
     def process_response(self, request: Request, response: Response, spider: Spider):
-        meta = getattr(request, "meta", None)
+        meta: dict = getattr(request, "meta", {})
 
         if meta:
-            for field in self.service_fields:
-                try:
-                    del meta[field]
-                except KeyError:
-                    pass
-            self.last_meta = meta
+            values = [(k, v) for k, v in meta.items() if k not in self.service_fields]
+            self.last_meta = dict(values)
         return response
