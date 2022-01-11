@@ -29,6 +29,9 @@ export default class Settings implements SettingsProperties, ExampleSpiderProper
     public readonly EXAMPLE_SPIDER_TASK_QUEUE: string;
     public readonly EXAMPLE_SPIDER_ERROR_QUEUE: string;
 
+    public readonly GEOSURF_PROXY: string;
+    public readonly GEOSURF_PROXY_AUTH: string;
+
     public static getInstance(settingsProperties: SettingsProperties = {}): Settings {
         if (!this.instance) {
             this.instance = new this();
@@ -36,6 +39,12 @@ export default class Settings implements SettingsProperties, ExampleSpiderProper
         }
 
         return Object.freeze(this.instance);
+    }
+
+    public static getRandomSessionCode(): number {
+        const min = 100000;
+        const max = 999999;
+        return Math.random() * (max - min) + min;
     }
 
     protected constructor() {
@@ -68,5 +77,8 @@ export default class Settings implements SettingsProperties, ExampleSpiderProper
 
         this.EXAMPLE_SPIDER_TASK_QUEUE = process.env.EXAMPLE_SPIDER_TASK_QUEUE ? process.env.EXAMPLE_SPIDER_TASK_QUEUE : 'example_spider_task_queue';
         this.EXAMPLE_SPIDER_ERROR_QUEUE = process.env.EXAMPLE_SPIDER_ERROR_QUEUE ? process.env.EXAMPLE_SPIDER_ERROR_QUEUE : 'example_spider_error_queue';
+
+        this.GEOSURF_PROXY = process.env.GEOSURF_PROXY ? process.env.GEOSURF_PROXY : '';
+        this.GEOSURF_PROXY_AUTH = process.env.GEOSURF_PROXY_AUTH ? process.env.GEOSURF_PROXY_AUTH : '';
     }
 }

@@ -56,9 +56,32 @@ export default class PuppeteerBrowserMaker {
         return { browser, page };
     }
 
+    public static getRandomSessionCode(): number {
+        const min = 100000;
+        const max = 999999;
+        return Math.random() * (max - min) + min;
+    }
+
     private static getProxyPlugin(settings: Settings): PuppeteerExtraPlugin | null {
         if (settings.proxyEnabled) {
-            if (settings.proxy.host.length && settings.proxy.port.length) {
+            if (settings.GEOSURF_PROXY && settings.GEOSURF_PROXY_AUTH){
+                this.logger.info("Used GEOSURF_PROXY from .env");
+                const [host, port] = settings.GEOSURF_PROXY.split(':')
+
+                var geosurf_proxy_auth_template: string = settings.GEOSURF_PROXY_AUTH;
+                geosurf_proxy_auth_template = geosurf_proxy_auth_template.replace("{session_code}", Settings.getRandomSessionCode().toString());
+                const [username, password] = geosurf_proxy_auth_template.split(':');
+
+                return ProxyPlugin({
+                    address: host,
+                    port: port,
+                    credentials: {
+                        username: username,
+                        password: password
+                    }
+                });
+            }else if (settings.proxy.host.length && settings.proxy.port.length){
+                this.logger.info("Used PUPPETEER_PROXY from .env");
                 return ProxyPlugin({
                     address: settings.proxy.host,
                     port: Number.parseInt(settings.proxy.port),
@@ -68,7 +91,7 @@ export default class PuppeteerBrowserMaker {
                     }
                 });
             } else {
-                throw new Error('Proxy enabled but not configured');
+            throw new Error('Proxy enabled but not configured');
             }
         } else {
             PuppeteerBrowserMaker.logger.warn('PROXY DISABLED');

@@ -16,6 +16,9 @@ SPIDER_MODULES = ["spiders"]
 NEWSPIDER_MODULE = "spiders"
 COMMANDS_MODULE = "commands"
 
+GEOSURF_PROXY = os.getenv("GEOSURF_PROXY", "")
+GEOSURF_PROXY_AUTH = os.getenv("GEOSURF_PROXY_AUTH", "")
+
 PROXY = os.getenv("PROXY", "")
 PROXY_AUTH = os.getenv("PROXY_AUTH", "")
 PROXY_ENABLED = strtobool(os.getenv("PROXY_ENABLED", "False"))

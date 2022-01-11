@@ -14,7 +14,7 @@ class TestSpider(Spider):
 
     def parse(self, response, **kwargs):
         self.logger.warning(response.text)
-        if self.index < 10:
+        if self.index < 2:
             self.index += 1
             yield Request(
                 url=self.start_urls[0],

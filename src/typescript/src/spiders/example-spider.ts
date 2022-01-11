@@ -47,6 +47,7 @@ export default class ExampleSpider extends Spider {
 
                 // extractData
                 this.logger.info(`Parsed ${url}`);
+                this.logger.info(await response?.text());
                 return;
             } catch (e) {
                 this.logger.warn(e);
