@@ -8,6 +8,7 @@ import ExampleSpiderProperties from "../interfaces/example-spider-properties";
 import ErrorItem from "../items/output-item/error-item";
 import ExampleInputItem from "../items/input-item/example-input-item";
 import ExampleOutputItem from "../items/output-item/example-output-item";
+import {mobileproxyChangeIp, mobileproxyChangeEquipment} from "../utils/mobileproxy-manager";
 
 
 export default class ExampleSpider extends Spider {
@@ -47,25 +48,16 @@ export default class ExampleSpider extends Spider {
 
                 // extractData
                 this.logger.info(`Parsed ${url}`);
-                return;
+                this.logger.info(await response?.text());
+                //this.logger.info(await mobileproxyChangeIp('b28af936fd9de0cd75635406befc53b9'));
+                //this.logger.info(await mobileproxyChangeEquipment('664742bbcf33dbd02971608d47a525fc', '55117'))
             } catch (e) {
                 this.logger.warn(e);
                 error = e;
                 await this.restartBrowser();
             }
         }
-
-        if (error) {
-            this.logger.error(error);
-            yield new ErrorItem(
-                error instanceof Error ? error.toString() : String(error),
-                null, // error.stack ? error.stack: null,
-                response !== null ? response.url() : url,
-                !!response ? response.status() : null,
-                null,
-                inputMessage,
-            );
-        }
+        return;
     }
 
     async isErrorResponseStatusCode(response: HTTPResponse | null): Promise<boolean> {
