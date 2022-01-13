@@ -4,7 +4,7 @@ const MOBILEPROXY_RELOAD_IP_ENDPOINT: string = "https://mobileproxy.space/reload
 const MOBILEPROXY_CHANGE_EQUIPMENT_ENDPOINT: string = "https://mobileproxy.space/api.html?command=change_equipment"
 const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36"
 
-export async function mobileproxyChangeIp(proxyKey: string): Promise<boolean>{
+export async function mobileproxyChangeIp(proxyKey: string): Promise<object>{
     const mobileproxy_response = await axios.get(MOBILEPROXY_RELOAD_IP_ENDPOINT, {
         params: {
             "proxy_key": proxyKey,
@@ -17,7 +17,7 @@ export async function mobileproxyChangeIp(proxyKey: string): Promise<boolean>{
     return mobileproxy_response.data
 }
 
-export async function mobileproxyChangeEquipment(apiToken:string, proxyId: string, geoId: string = '', operator: string = ''): Promise<boolean>{
+export async function mobileproxyChangeEquipment(apiToken:string, proxyId: string, geoId: string = '', operator: string = ''): Promise<object>{
     // geoId - can be getting from the list that must be received by making a separate request:
     //
     // curl --request GET \
