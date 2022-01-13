@@ -18,6 +18,11 @@ export async function mobileproxyChangeIp(proxyKey: string): Promise<boolean>{
 }
 
 export async function mobileproxyChangeEquipment(apiToken:string, proxyId: string, geoId: string = '', operator: string = ''): Promise<boolean>{
+    // geoId - can be getting from the list that must be received by making a separate request:
+    //
+    // curl --request GET \
+    // --url https://mobileproxy.space/api.html?command=get_geo_list&operator={operator} \
+    // --header 'Authorization: Bearer {apiToken}'
 
     const mobileproxy_response = await axios.get(MOBILEPROXY_CHANGE_EQUIPMENT_ENDPOINT, {
         params: {
