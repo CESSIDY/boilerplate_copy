@@ -5,3 +5,5 @@ from .mysql_status import MysqlStatusMixin
 from .mysql_timestamps import MysqlTimestampsMixin
 from .mysql_error import MysqlErrorMixin
 from .mysql_coordinates import MysqlCoordinatesMixin
+from .mysql_attempts_counter import MysqlAttemptsCounterMixin
+from .mysql_priority import MysqlPriorityMixin

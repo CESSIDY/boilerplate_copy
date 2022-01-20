@@ -26,7 +26,6 @@ def upgrade():
                server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")),
         mysql_collate="utf8mb4_unicode_ci"
     )
-    op.create_unique_constraint('uq_countries_first_name_country_id', 'countries', ['name', 'country_id'])
 
 
 def downgrade():
