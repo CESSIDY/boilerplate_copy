@@ -6,7 +6,7 @@ import json
 from w3lib.http import basic_auth_header
 from pathlib import Path
 
-log = logging.getLogger('scrapy.proxy_rotation')
+log = logging.getLogger('proxy_rotation')
 
 class ProxyMode:
     RANDOMIZE_EVERY_REQUESTS = 1
@@ -22,8 +22,8 @@ class ProxyRotationMiddleware:
 
     proxy_list.json:
         [
-            {"proxy": "xxx.xxx.xxx:xxxx","auth": ""},
-            {"proxy": "xxx.xxx.xxx:xxxx","auth": ""}
+            {"proxy": "xxx.xxx.xxx:xxxx","auth": "xxx:xxx"},
+            {"proxy": "xxx.xxx.xxx:xxxx","auth": "xxx:xxx"}
         ]
     """
 
