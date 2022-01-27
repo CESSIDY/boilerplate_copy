@@ -91,7 +91,6 @@ export class RabbitConnector {
         try {
             await channel.consume(queueName, receivedMessage => {
                 this.logger.info(`received message with delivery tag ${receivedMessage!.fields.deliveryTag}`);
-                console.log(receivedMessage!.fields.toString())
                 wrapper(receivedMessage!);
                 loggerCounter = 0;
                 loggerStartConsume = loggerSecond;
