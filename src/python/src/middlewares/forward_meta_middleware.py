@@ -3,7 +3,12 @@ from scrapy.http import Response
 
 
 class ForwardMetaMiddleware:
-    """This middleware allows spiders to forward meta from response to request"""
+    """This middleware allows spiders to forward meta from response to request
+
+    spider:
+        Change service fields list:
+            meta_service_fields = []
+    """
 
     def __init__(self):
         self.last_meta = None
