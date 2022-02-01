@@ -16,6 +16,7 @@ class UserAgentMode:
 class UserAgentMiddleware:
     """
     This middleware allows spiders to use the user_agent from list
+
     settings.py:
         USER_AGENT_LIST = [
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64)...",
@@ -24,6 +25,12 @@ class UserAgentMiddleware:
         ...
         ]
         USER_AGENT_MODE = 1 or 2 or 3
+
+    spider:
+        Change UA list:
+            user_agents = []
+        Change the UA selection mode:
+            user_agent_mode = 1 or 2 or 3
     """
     UA_RELEVAN_DAYS = 180
 
