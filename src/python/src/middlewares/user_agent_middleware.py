@@ -34,24 +34,29 @@ class UserAgentMiddleware:
     """
     UA_RELEVAN_DAYS = 180
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, settings):
         self.last_user_agent = None
         self.user_agent = None
         self.user_agents = None
 
+        self.user_agent_release_data_checking(settings['USER_AGENT_RELEASE_DATE'])
+        self.user_agent = settings['USER_AGENT']
+        self._set_user_agents(settings['USER_AGENT_LIST'])
+        self.mode: int = int(settings['USER_AGENT_MODE']) if settings['USER_AGENT_MODE'] else None
+        self.proxy: str = settings['PROXY']
+        self.proxy_auth: str = settings['PROXY_AUTH']
+        self.proxy_enabled: bool = bool(settings['PROXY_ENABLED']) if settings['PROXY_ENABLED'] else None
+        self.proxy_list: list = self.get_proxy_list(settings)
+
+
     @classmethod
     def from_crawler(cls, crawler):
-        o = cls()
-        o.user_agent_release_data_checking(crawler)
-        o.user_agent = crawler.settings['USER_AGENT']
-        o._set_user_agents(crawler.settings['USER_AGENT_LIST'])
-        o.mode = crawler.settings['USER_AGENT_MODE']
+        o = cls(crawler.settings)
         crawler.signals.connect(o.spider_opened, signal=signals.spider_opened)
         return o
 
     @staticmethod
-    def user_agent_release_data_checking(crawler):
-        user_agent_release_date = crawler.settings['USER_AGENT_RELEASE_DATE']
+    def user_agent_release_data_checking(user_agent_release_date):
         if datetime(*[int(number) for number in user_agent_release_date.split('-')]) + timedelta(days=UserAgentMiddleware.UA_RELEVAN_DAYS) < datetime.now():
             log.warning('USER_AGENT is outdated')
 
