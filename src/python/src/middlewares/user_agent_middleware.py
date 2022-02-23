@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import random
 import itertools
 
-log = logging.getLogger('scrapy.useragent')
+log = logging.getLogger('useragents_middleware')
 
 
 class UserAgentMode:
@@ -36,17 +36,11 @@ class UserAgentMiddleware:
 
     def __init__(self, settings):
         self.last_user_agent = None
-        self.user_agent = None
         self.user_agents = None
-
         self.user_agent_release_data_checking(settings['USER_AGENT_RELEASE_DATE'])
         self.user_agent = settings['USER_AGENT']
         self._set_user_agents(settings['USER_AGENT_LIST'])
         self.mode: int = int(settings['USER_AGENT_MODE']) if settings['USER_AGENT_MODE'] else None
-        self.proxy: str = settings['PROXY']
-        self.proxy_auth: str = settings['PROXY_AUTH']
-        self.proxy_enabled: bool = bool(settings['PROXY_ENABLED']) if settings['PROXY_ENABLED'] else None
-        self.proxy_list: list = self.get_proxy_list(settings)
 
 
     @classmethod
